@@ -51,7 +51,9 @@
   --card-foreground: #000; /* Set text color to black */
   --popover: #fff; /* Keep background color unchanged */
   --popover-foreground: #000; /* Set text color to black */
-  --primary: #fff; /* Keep background color unchanged */
+  --primary: #FF7917;
+  --blue:#68DBFF; 
+  --orange:#FF7917;/* Keep background color unchanged */
   --primary-foreground: #000; /* Set text color to black */
   --secondary: #fff; /* Keep background color unchanged */
   --secondary-foreground: #000; /* Set text color to black */
