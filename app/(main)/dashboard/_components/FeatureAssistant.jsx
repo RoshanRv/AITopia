@@ -2,9 +2,10 @@
 import { useUser } from '@stackframe/stack'
 import React from 'react'
 import { Button } from '@/components/ui/button';
-import { ExpertsList } from '@/services/Options';
+import { CoachingOptions } from '@/services/Options';
 import  Image  from 'next/image';
 import { BlurFade } from '@/components/magicui/blur-fade';
+import UserInputDialog from './UserInputDialog';
 
 
 function FeatureAssistant() {
@@ -19,16 +20,20 @@ return (
             <Button className='text-white'>Profile</Button>
         </div>
         <div className='grid grid-cols-2 lg:grid-cols-5 xl:grid-cols-5 gap-10 m-10'>
-        {ExpertsList.map((option,index)=>(
+        {CoachingOptions.map((option,index)=>(
             <BlurFade key ={option.icon} delay={0.25 + index * 0.05} inView>
-            <div key={index} className='p-3 bg-gray-200 rounded-3xl flex flex-col justify-center items-center'>
-                <Image src={option.icon} alt={option.name}
-                width={150}
-                height={150}
-                className='h-[70px] w-[70px] hover:rotate-12 cursor-pointer transition-all'
-                />
-                <h2 className='mt-2'>{option.name}</h2>
-            </div>
+                <div key={index} className='p-3 bg-gray-200 rounded-3xl flex flex-col justify-center items-center'>
+                    <UserInputDialog CoachingOptions={option}>
+                        <div key={index} className='flex flex-col justify-center items-center'>
+                            <Image src={option.icon} alt={option.name}
+                            width={150}
+                            height={150}
+                            className='h-[70px] w-[70px] hover:rotate-12 cursor-pointer transition-all'
+                            />
+                            <h2 className='mt-2'>{option.name}</h2>
+                        </div>
+                    </UserInputDialog>
+                </div>
             </BlurFade>
         ))}
         </div>
