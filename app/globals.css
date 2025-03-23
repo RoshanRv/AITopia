@@ -1,7 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
+/* @custom-variant dark (&:is(.dark *)); */
 
 @theme inline {
   --color-background: var(--background);
@@ -59,7 +59,7 @@
   --muted-foreground: #000; /* Set text color to black */
   --accent: #fff; /* Keep background color unchanged */
   --accent-foreground: #000; /* Set text color to black */
-  --destructive: #fff; /* Keep background color unchanged */
+  --destructive: #d41a1a; /* Keep background color unchanged */
   --border: #000; /* Set border color to black */
   --input: #fff; /* Keep background color unchanged */
   --ring: #000; /* Set ring color to black */
@@ -78,39 +78,7 @@
   --sidebar-ring: #000; /* Set ring color to black */
 }
 
-.dark {
-  --background: #000; /* Keep background color unchanged */
-  --foreground: #000; /* Set text color to black */
-  --card: #000; /* Keep background color unchanged */
-  --card-foreground: #000; /* Set text color to black */
-  --popover: #000; /* Keep background color unchanged */
-  --popover-foreground: #000; /* Set text color to black */
-  --primary: #000; /* Keep background color unchanged */
-  --primary-foreground: #000; /* Set text color to black */
-  --secondary: #000; /* Keep background color unchanged */
-  --secondary-foreground: #000; /* Set text color to black */
-  --muted: #000; /* Keep background color unchanged */
-  --muted-foreground: #000; /* Set text color to black */
-  --accent: #000; /* Keep background color unchanged */
-  --accent-foreground: #000; /* Set text color to black */
-  --destructive: #000; /* Keep background color unchanged */
-  --border: #000; /* Set border color to black */
-  --input: #000; /* Keep background color unchanged */
-  --ring: #000; /* Set ring color to black */
-  --chart-1: #000; /* Set chart color to black */
-  --chart-2: #000; /* Set chart color to black */
-  --chart-3: #000; /* Set chart color to black */
-  --chart-4: #000; /* Set chart color to black */
-  --chart-5: #000; /* Set chart color to black */
-  --sidebar: #000; /* Keep background color unchanged */
-  --sidebar-foreground: #000; /* Set text color to black */
-  --sidebar-primary: #000; /* Keep background color unchanged */
-  --sidebar-primary-foreground: #000; /* Set text color to black */
-  --sidebar-accent: #000; /* Keep background color unchanged */
-  --sidebar-accent-foreground: #000; /* Set text color to black */
-  --sidebar-border: #000; /* Set border color to black */
-  --sidebar-ring: #000; /* Set ring color to black */
-}
+
 
 @layer base {
   * {

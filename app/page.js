@@ -4,9 +4,10 @@ import { UserButton } from '@stackframe/stack';
 export default function Home() {
   return (
     <>
-      <h1>Harini</h1>
+      <h1 className='text-red-500'>Harini</h1>
         <Button>Click me</Button>
         <UserButton/>
+
     </>
 
   );
