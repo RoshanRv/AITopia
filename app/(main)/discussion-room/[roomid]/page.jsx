@@ -1,25 +1,27 @@
 "use client";
 
 import { api } from "@/convex/_generated/api";
-import { CoachingExpert } from "@/services/Options";
+import { CoachingExpert, coachingOptions } from "@/services/Options"; // Ensure coachingOptions is imported if needed.
 import { UserButton } from "@stackframe/stack";
 import { useQuery } from "convex/react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Loader2Icon } from "lucide-react";
+import { AIModel } from "@/services/GlobalServices";
 
 function DiscussionRoom() {
   const { roomid } = useParams();
-  const DiscussionRoomData = useQuery(api.DiscussionRoom.GetDiscussionRoom, {
-    id: roomid,
-  });
-  const [expert, setExpert] = useState();
+  const DiscussionRoomData = useQuery(api.DiscussionRoom.GetDiscussionRoom, { id: roomid });
+  const [expert, setExpert] = useState(null);
   const [transcript, setTranscript] = useState("");
   const [enableMic, setEnableMic] = useState(false);
   const [recognition, setRecognition] = useState(null);
   const [conversation, setConversation] = useState([]);
+  const [loading, setLoading] = useState(false);
 
+  // Set expert data when DiscussionRoomData is available
   useEffect(() => {
     if (DiscussionRoomData) {
       const Expert = CoachingExpert.find(
@@ -30,8 +32,8 @@ function DiscussionRoom() {
     }
   }, [DiscussionRoomData]);
 
+  // Check if browser supports SpeechRecognition
   useEffect(() => {
-    // Check if browser supports SpeechRecognition
     const SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
@@ -39,12 +41,33 @@ function DiscussionRoom() {
     }
   }, []);
 
-  // Renamed connectToServer instead of startRecognition.
-  const connectToServer = () => {
+  // Async helper to call the AI model with a final transcript chunk
+  const callAI = async (message) => {
+    try {
+      // Call your AIModel function passing the topic, coachingOptions (or coachingOption name), and the user's message
+      const aiResponse = await AIModel(
+        DiscussionRoomData.topic,
+        DiscussionRoomData.coachingOptions, // or pass a specific coaching option name
+        message
+      );
+      console.log("AI Response:", aiResponse);
+      // Optionally update conversation state with the AI response:
+      setConversation((prev) => [
+        ...prev,
+        { role: "assistant", content: aiResponse.choices[0].message.content },
+      ]);
+    } catch (error) {
+      console.error("Error calling AI model:", error);
+    }
+  };
+
+  const connectToServer = async () => {
+    setLoading(true);
     const SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
       alert("Speech Recognition API is not supported in your browser.");
+      setLoading(false);
       return;
     }
     const recognitionInstance = new SpeechRecognition();
@@ -59,31 +82,36 @@ function DiscussionRoom() {
         const transcriptChunk = event.results[i][0].transcript;
         if (event.results[i].isFinal) {
           finalTranscript += transcriptChunk + " ";
+          // Add final chunk to conversation as user message
+          setConversation((prev) => [
+            ...prev,
+            { role: "user", content: transcriptChunk },
+          ]);
+          // Call the AI model for this final transcript chunk
+          callAI(transcriptChunk);
         } else {
           interimTranscript += transcriptChunk;
         }
       }
-      // Combine final transcript with interim results for live updating
+      // Update the displayed transcript
       setTranscript(finalTranscript + interimTranscript);
     };
 
-    if (transcript.message_type == "finalTranscript" ){
-      setConversation(prev=>[...prev,{
-        role:'user',
-        content:transcript.text
-      }])
-    }
-
     recognitionInstance.onerror = (event) => {
-      console.error("Speech recognition error:", event.error);
+      if (event.error !== "aborted") {
+        console.error("Speech recognition error:", event.error);
+      }
     };
 
     recognitionInstance.onend = () => {
       console.log("Speech recognition ended");
       setEnableMic(false);
+      setLoading(false);
     };
 
     recognitionInstance.start();
+    // Once recognition starts, set loading to false so that the spinner stops
+    setLoading(false);
     setRecognition(recognitionInstance);
     setEnableMic(true);
   };
@@ -92,6 +120,7 @@ function DiscussionRoom() {
     if (recognition) {
       recognition.stop();
       setEnableMic(false);
+      setLoading(false);
     }
   };
 
@@ -124,10 +153,16 @@ function DiscussionRoom() {
           </div>
           <div className="mt-5 flex items-center justify-center">
             {!enableMic ? (
-              <Button onClick={connectToServer}>Connect</Button>
+              <Button onClick={connectToServer} disabled={loading}>
+                {loading && <Loader2Icon className="animate-spin" />} Connect
+              </Button>
             ) : (
-              <Button variant="destructive" onClick={stopRecognition}>
-                Disconnect
+              <Button
+                variant="destructive"
+                onClick={stopRecognition}
+                disabled={loading}
+              >
+                {loading && <Loader2Icon className="animate-spin" />} Disconnect
               </Button>
             )}
           </div>
@@ -138,6 +173,14 @@ function DiscussionRoom() {
             flex flex-col items-center justify-center relative"
           >
             <h2>Chat section</h2>
+            {/* Optionally render conversation messages */}
+            <div className="mt-4 w-full overflow-auto max-h-[40vh]">
+              {conversation.map((msg, idx) => (
+                <div key={idx} className={`p-2 ${msg.role === "assistant" ? "bg-blue-100" : "bg-green-100"}`}>
+                  <p>{msg.content}</p>
+                </div>
+              ))}
+            </div>
           </div>
           <h2 className="mt-4 text-gray-400 text-sm">
             At the end of your conversation we will automatically generate
