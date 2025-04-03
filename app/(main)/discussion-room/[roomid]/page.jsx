@@ -1,7 +1,7 @@
 "use client";
 
 import { api } from "@/convex/_generated/api";
-import { CoachingExpert, coachingOptions } from "@/services/Options"; // Ensure coachingOptions is imported if needed.
+import { CoachingExpert, coachingOptions } from "@/services/Options";
 import { UserButton } from "@stackframe/stack";
 import { useQuery } from "convex/react";
 import Image from "next/image";
@@ -10,6 +10,7 @@ import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Loader2Icon } from "lucide-react";
 import { AIModel } from "@/services/GlobalServices";
+import ChatBox from "./_components/ChatBox";
 
 function DiscussionRoom() {
   const { roomid } = useParams();
@@ -18,10 +19,13 @@ function DiscussionRoom() {
   const [transcript, setTranscript] = useState("");
   const [enableMic, setEnableMic] = useState(false);
   const [recognition, setRecognition] = useState(null);
-  const [conversation, setConversation] = useState([]);
+  const [conversation, setConversation] = useState([
+    { role: "assistant", content: "Hi" },
+    { role: "user", content: "Hello" },
+  ]);
   const [loading, setLoading] = useState(false);
+  const [manualStop, setManualStop] = useState(false);
 
-  // Set expert data when DiscussionRoomData is available
   useEffect(() => {
     if (DiscussionRoomData) {
       const Expert = CoachingExpert.find(
@@ -32,7 +36,6 @@ function DiscussionRoom() {
     }
   }, [DiscussionRoomData]);
 
-  // Check if browser supports SpeechRecognition
   useEffect(() => {
     const SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -41,28 +44,40 @@ function DiscussionRoom() {
     }
   }, []);
 
-  // Async helper to call the AI model with a final transcript chunk
-  const callAI = async (message) => {
-    try {
-      // Call your AIModel function passing the topic, coachingOptions (or coachingOption name), and the user's message
-      const aiResponse = await AIModel(
-        DiscussionRoomData.topic,
-        DiscussionRoomData.coachingOptions, // or pass a specific coaching option name
-        message
-      );
-      console.log("AI Response:", aiResponse);
-      // Optionally update conversation state with the AI response:
-      setConversation((prev) => [
-        ...prev,
-        { role: "assistant", content: aiResponse.choices[0].message.content },
-      ]);
-    } catch (error) {
-      console.error("Error calling AI model:", error);
+  // Effect that triggers an AI call when the last conversation message is from the user.
+  useEffect(() => {
+    async function fetchAIResponse() {
+      if (!DiscussionRoomData) return;
+      if (conversation.length === 0) return;
+      if (conversation[conversation.length - 1].role === "user") {
+        // Capture the last two messages for context.
+        const lastTwoMsg = conversation.slice(-2);
+        console.log("User response received:", lastTwoMsg);
+        try {
+          const aiResponse = await AIModel(
+            DiscussionRoomData.topic,
+            DiscussionRoomData.coachingOptions,
+            lastTwoMsg
+          );
+          console.log("AI Response:", aiResponse);
+          setConversation((prev) => [
+            ...prev,
+            {
+              role: "assistant",
+              content: aiResponse.choices[0].message.content,
+            },
+          ]);
+        } catch (error) {
+          console.error("Error in AI call:", error);
+        }
+      }
     }
-  };
+    fetchAIResponse();
+  }, [conversation, DiscussionRoomData]);
 
   const connectToServer = async () => {
     setLoading(true);
+    setManualStop(false);
     const SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
@@ -82,18 +97,16 @@ function DiscussionRoom() {
         const transcriptChunk = event.results[i][0].transcript;
         if (event.results[i].isFinal) {
           finalTranscript += transcriptChunk + " ";
-          // Add final chunk to conversation as user message
+          // Immediately add the final user response to conversation
           setConversation((prev) => [
             ...prev,
             { role: "user", content: transcriptChunk },
           ]);
-          // Call the AI model for this final transcript chunk
-          callAI(transcriptChunk);
+          console.log("Added user response:", transcriptChunk);
         } else {
           interimTranscript += transcriptChunk;
         }
       }
-      // Update the displayed transcript
       setTranscript(finalTranscript + interimTranscript);
     };
 
@@ -105,19 +118,23 @@ function DiscussionRoom() {
 
     recognitionInstance.onend = () => {
       console.log("Speech recognition ended");
-      setEnableMic(false);
-      setLoading(false);
+      if (!manualStop) {
+        recognitionInstance.start();
+      } else {
+        setEnableMic(false);
+        setLoading(false);
+      }
     };
 
     recognitionInstance.start();
-    // Once recognition starts, set loading to false so that the spinner stops
-    setLoading(false);
     setRecognition(recognitionInstance);
     setEnableMic(true);
+    setLoading(false);
   };
 
   const stopRecognition = () => {
     if (recognition) {
+      setManualStop(true);
       recognition.stop();
       setEnableMic(false);
       setLoading(false);
@@ -168,27 +185,9 @@ function DiscussionRoom() {
           </div>
         </div>
         <div>
-          <div
-            className="h-[60vh] bg-secondary border rounded-4xl
-            flex flex-col items-center justify-center relative"
-          >
-            <h2>Chat section</h2>
-            {/* Optionally render conversation messages */}
-            <div className="mt-4 w-full overflow-auto max-h-[40vh]">
-              {conversation.map((msg, idx) => (
-                <div key={idx} className={`p-2 ${msg.role === "assistant" ? "bg-blue-100" : "bg-green-100"}`}>
-                  <p>{msg.content}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-          <h2 className="mt-4 text-gray-400 text-sm">
-            At the end of your conversation we will automatically generate
-            feedback/notes from your conversation.
-          </h2>
+          <ChatBox conversation={conversation} />
         </div>
       </div>
-      {/* Live transcript displayed in an h2 tag */}
       <div className="mt-10 text-center">
         <h2 className="text-2xl font-semibold">{transcript}</h2>
       </div>
