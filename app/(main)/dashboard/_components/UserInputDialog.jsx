@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import {
     Dialog,
     DialogContent,
@@ -15,6 +15,7 @@ import { api } from '@/convex/_generated/api';
 import { LoaderCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { UserContext } from '@/app/_context/UserContext';
 
 function UserInputDialog({children, CoachingOptions}) {
     const [topic,setTopic] = useState();
@@ -22,13 +23,15 @@ function UserInputDialog({children, CoachingOptions}) {
     const [loading,setLoading] = useState(false); 
     const [openDialog,setOpenDialog] = useState(false);
     const router = useRouter();
+    const {userData} = useContext(UserContext);
 
     const onClickNext = async()=>{
         setLoading(true);
         const result = await createDiscussionRoom({
             topic:topic,
             coachingOptions:CoachingOptions?.name,
-            expertName: "kore" 
+            expertName: "kore" ,
+            uid:userData?._id
         })
         setLoading(false);
         setOpenDialog(false);

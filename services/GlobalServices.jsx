@@ -63,3 +63,29 @@ export const ConvertTextToSpeech = async (text) => {
 
 
 
+export const AIModelToGenerateFeedbackAndNotes = async (coachingOption, conversation) => {
+  const option = CoachingOptions.find((item) => item.name === coachingOption);
+  if (!option) {
+    throw new Error(`Coaching option "${coachingOption}" not found.`);
+  }
+  const prompt = option.summeryPrompt;
+
+  const feedbackConversationText = conversation
+    .map((msg) => `${msg.role}: ${msg.content}`)
+    .join("\n");
+  const combinedPrompt = `${prompt}\n\n${feedbackConversationText}`;
+
+  try {
+    const response = await ai.models.generateContent({
+      model: "gemini-2.0-flash",
+      contents: combinedPrompt,
+    });
+    console.log("Gemini API Response:", response.text);
+    return { choices: [{ message: { content: response.text } }] };
+  } catch (error) {
+    console.error("Error calling Gemini API:", error);
+    throw error;
+  }
+};
+
+

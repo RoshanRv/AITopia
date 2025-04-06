@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2Icon } from "lucide-react";
 import { AIModel, ConvertTextToSpeech } from "@/services/GlobalServices";
 import ChatBox from "./_components/ChatBox";
+import { toast } from "sonner";
 
 function DiscussionRoom() {
   const { roomid } = useParams();
@@ -20,6 +21,7 @@ function DiscussionRoom() {
   const [enableMic, setEnableMic] = useState(false);
   const [recognition, setRecognition] = useState(null);
   const [audioUrl, setAudioUrl] = useState();
+  const [enableFeedBackNotes, setEnableFeedBackNotes] = useState(false);
   const [conversation, setConversation] = useState([
     { role: "assistant", content: "Hi" },
     { role: "user", content: "Hello" },
@@ -94,7 +96,7 @@ function DiscussionRoom() {
     const recognitionInstance = new SpeechRecognition();
     recognitionInstance.continuous = true;
     recognitionInstance.interimResults = true;
-    recognitionInstance.lang = "ta-IN";
+    recognitionInstance.lang = "en-US";
 
     recognitionInstance.onresult = (event) => {
       let finalTranscript = "";
@@ -136,6 +138,7 @@ function DiscussionRoom() {
     setRecognition(recognitionInstance);
     setEnableMic(true);
     setLoading(false);
+    toast("Connected to server successfully");
   };
 
   const stopRecognition = async() => {
@@ -143,12 +146,13 @@ function DiscussionRoom() {
       setManualStop(true);
       recognition.stop();
       setEnableMic(false);
-      setLoading(false);
-
+      toast("Disconnected");
       await UpdateConversation({
         id: DiscussionRoomData._id,
         conversation: conversation
       });
+      setLoading(false);
+      setEnableFeedBackNotes(true);
     }
   };
 
@@ -197,7 +201,11 @@ function DiscussionRoom() {
           </div>
         </div>
         <div>
-          <ChatBox conversation={conversation} />
+          <ChatBox 
+          conversation={conversation}
+          enableFeedBackNotes = {enableFeedBackNotes}
+          coachingOptions={DiscussionRoomData?.coachingOptions}
+           />
         </div>
       </div>
       <div className="mt-10 text-center">
