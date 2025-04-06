@@ -10,15 +10,13 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { CoachingExpert } from '@/services/Options';
-import Image from 'next/image';
 import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { LoaderCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
-function UserInputDialog({children,CoachingOptions}) {
-    const [selectedExpert,setSelectedExpert] = useState();
+function UserInputDialog({children, CoachingOptions}) {
     const [topic,setTopic] = useState();
     const createDiscussionRoom = useMutation(api.DiscussionRoom.CreateNewRoom);
     const [loading,setLoading] = useState(false); 
@@ -30,9 +28,8 @@ function UserInputDialog({children,CoachingOptions}) {
         const result = await createDiscussionRoom({
             topic:topic,
             coachingOptions:CoachingOptions?.name,
-            expertName:selectedExpert
+            expertName: "kore" 
         })
-        console.log(result);
         setLoading(false);
         setOpenDialog(false);
         router.push('/discussion-room/' + result);
@@ -48,26 +45,22 @@ return (
                                 <h2 className='text-black'>Enter a Topic to master your skills in {CoachingOptions.name}</h2>
                                 <Textarea placeholder = "Enter your Topic here..." className="mt-2" 
                                 onChange={(e)=>setTopic(e.target.value)}/>
-                                <h2 className='text-black mt-5'>Select your Coaching Expert</h2>
-                                <div className='grid grid-cols-3 md:grid-cols-5 gap-6 mt-3'>
-                                    {CoachingExpert.map((expert,index)=>(
-                                        <div key={index} onClick={()=>setSelectedExpert(expert.name)}
-                                        >
-                                            <Image src={expert.avatar} alt={expert.name}
-                                            width={100}
-                                            height={100}
-                                            className={`rounded-2xl border-primary p-1 h-[80px] object-cover hover:scale-105 transition-all cursor-pointer
-                                                ${selectedExpert==expert.name&&'border'}`}
-                                            />
-                                            <h2 className='text-center'>{expert.name}</h2>
-                                        </div>
-                                    ))}
+                                <h2 className='text-black mt-5'>Coaching Assistant</h2>
+                                <div className='flex flex-col items-center justify-center mt-3'>
+                                    <Image 
+                                        src="/ai.gif" 
+                                        alt="Kore AI"
+                                        width={100}
+                                        height={100}
+                                        className="h-[80px] w-[80px] object-cover rounded-full"
+                                    />
+                                    <h2 className='text-center font-bold mt-2'>Kore AI</h2>
                                 </div>
                                 <div className='flex gap-5 justify-end mt-5'>
                                     <DialogClose asChild>
                                         <Button variant={'ghost'}>Cancel</Button>
                                     </DialogClose>
-                                    <Button disabled={(!topic || !selectedExpert || loading)} onClick={onClickNext}>
+                                    <Button disabled={!topic || loading} onClick={onClickNext}>
                                     {loading && <LoaderCircle className='animate-spin'/>}Next</Button>
                                 </div>
                             </div>
@@ -75,7 +68,6 @@ return (
                 </DialogHeader>
             </DialogContent>
 </Dialog>
-
 )
 }
 

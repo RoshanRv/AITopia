@@ -9,7 +9,7 @@ import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Loader2Icon } from "lucide-react";
-import { AIModel } from "@/services/GlobalServices";
+import { AIModel, ConvertTextToSpeech } from "@/services/GlobalServices";
 import ChatBox from "./_components/ChatBox";
 
 function DiscussionRoom() {
@@ -19,6 +19,7 @@ function DiscussionRoom() {
   const [transcript, setTranscript] = useState("");
   const [enableMic, setEnableMic] = useState(false);
   const [recognition, setRecognition] = useState(null);
+  const [audioUrl, setAudioUrl] = useState();
   const [conversation, setConversation] = useState([
     { role: "assistant", content: "Hi" },
     { role: "user", content: "Hello" },
@@ -28,13 +29,12 @@ function DiscussionRoom() {
 
   useEffect(() => {
     if (DiscussionRoomData) {
-      const Expert = CoachingExpert.find(
-        (item) => item.name === DiscussionRoomData.expertName
-      );
-      console.log("Expert:", Expert);
-      setExpert(Expert);
+        setExpert({
+            name: "Kore AI",
+            avatar: "/ai.gif"
+        });
     }
-  }, [DiscussionRoomData]);
+}, [DiscussionRoomData]);
 
   useEffect(() => {
     const SpeechRecognition =
@@ -60,6 +60,12 @@ function DiscussionRoom() {
             lastTwoMsg
           );
           console.log("AI Response:", aiResponse);
+          // const url = await ConvertTextToSpeech(
+          // aiResponse.choices[0].message.content, 
+          // "kore"
+          // );
+          // console.log("Audio URL:", url);
+          // setAudioUrl(url);
           setConversation((prev) => [
             ...prev,
             {
@@ -88,7 +94,7 @@ function DiscussionRoom() {
     const recognitionInstance = new SpeechRecognition();
     recognitionInstance.continuous = true;
     recognitionInstance.interimResults = true;
-    recognitionInstance.lang = "en-US";
+    recognitionInstance.lang = "ta-IN";
 
     recognitionInstance.onresult = (event) => {
       let finalTranscript = "";
@@ -158,13 +164,14 @@ function DiscussionRoom() {
                 alt="avatar"
                 width={200}
                 height={200}
-                className="h-[80px] w-[80px] object-cover rounded-full animate-pulse"
+                className="h-[150px] w-[150px] object-cover rounded-full"
               />
             ) : (
               <p>Loading expert...</p>
             )}
-            <h2 className="text-gray-500">{expert?.name}</h2>
-            <div className="p-5 bg-gray-200 px-10 rounded-lg absolute bottom-10 right-10">
+            <h2 className="text-gray-500 mt-2">{expert?.name}</h2>
+            {/* <audio src={audioUrl} type="audio/mp3" autoPlay/> */}
+            <div className="p-5  bg-gray-200 px-10 rounded-lg absolute bottom-10 right-10">
               <UserButton />
             </div>
           </div>
