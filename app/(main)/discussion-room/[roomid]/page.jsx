@@ -3,7 +3,7 @@
 import { api } from "@/convex/_generated/api";
 import { CoachingExpert, coachingOptions } from "@/services/Options";
 import { UserButton } from "@stackframe/stack";
-import { useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -26,7 +26,7 @@ function DiscussionRoom() {
   ]);
   const [loading, setLoading] = useState(false);
   const [manualStop, setManualStop] = useState(false);
-
+  const UpdateConversation = useMutation(api.DiscussionRoom.UpdateConversation);
   useEffect(() => {
     if (DiscussionRoomData) {
         setExpert({
@@ -138,12 +138,17 @@ function DiscussionRoom() {
     setLoading(false);
   };
 
-  const stopRecognition = () => {
+  const stopRecognition = async() => {
     if (recognition) {
       setManualStop(true);
       recognition.stop();
       setEnableMic(false);
       setLoading(false);
+
+      await UpdateConversation({
+        id: DiscussionRoomData._id,
+        conversation: conversation
+      });
     }
   };
 
