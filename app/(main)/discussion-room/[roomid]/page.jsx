@@ -24,8 +24,8 @@ function DiscussionRoom() {
   const [audioUrl, setAudioUrl] = useState();
   const [enableFeedBackNotes, setEnableFeedBackNotes] = useState(false);
   const [conversation, setConversation] = useState([
-    { role: "assistant", content: "Hi" },
-    { role: "user", content: "Hello" },
+    // { role: "assistant", content: "Hi" },
+    // { role: "user", content: "Hello" },
   ]);
   const [loading, setLoading] = useState(false);
   const [manualStop, setManualStop] = useState(false);
@@ -51,8 +51,8 @@ function DiscussionRoom() {
   useEffect(() => {
     async function fetchAIResponse() {
       if (!DiscussionRoomData) return;
-      if (conversation.length === 0) return;
-      if (conversation[conversation.length - 1].role === "user") {
+      // if (conversation.length === 0) return;
+      if (conversation[conversation.length - 1]?.role === "user" || conversation.length === 0) {
         // Capture the last two messages for context.
         const lastTwoMsg = conversation.slice(-2);
         console.log("User response received:", lastTwoMsg);
@@ -60,7 +60,9 @@ function DiscussionRoom() {
           const aiResponse = await AIModel(
             DiscussionRoomData.topic,
             DiscussionRoomData.coachingOptions,
-            lastTwoMsg
+            lastTwoMsg,
+            DiscussionRoomData.language
+
           );
           console.log("AI Response:", aiResponse);
           // const url = await ConvertTextToSpeech(
@@ -97,7 +99,7 @@ function DiscussionRoom() {
     const recognitionInstance = new SpeechRecognition();
     recognitionInstance.continuous = true;
     recognitionInstance.interimResults = true;
-    recognitionInstance.lang = "en-US";
+    recognitionInstance.lang = DiscussionRoomData?.language || 'en-US';
 
     recognitionInstance.onresult = (event) => {
       let finalTranscript = "";

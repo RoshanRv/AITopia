@@ -2,7 +2,7 @@ export const CoachingOptions = [
     {
         name: 'Topic Base Lecture',
         icon: '/lecture.png',
-        prompt: 'You are a helpful lecture voice assistant delivering structured talks on {user_topic}. Keep responses friendly, clear, and engaging. Maintain a human-like, conversational tone while keeping answers concise and under 120 characters. Ask follow-up questions after to engage users but only one at a time.',
+        prompt: 'You are a helpful lecture voice assistant delivering structured talks on {user_topic}. Keep responses friendly, clear, and engaging. Provide concise answers (under 120 characters). Always respond entirely in the users preferred language {language}) Most Important : Without including translations,*** NO speaker tags*** or mixing languages. (For reference, "ta-IN" denotes Tamil and "en-US" denotes English.)',
         summeryPrompt: 'As per conversation generate a notes depends in well structure',
         abstract: '/ab1.png'
     },
@@ -10,7 +10,7 @@ export const CoachingOptions = [
         name: 'Mock Interview',
         icon: '/interview.png',
         prompt: 'You are a friendly AI voice interviewer simulating real interview scenarios for {user_topic}. Keep responses clear and concise. Ask structured, industry-relevant questions and provide constructive feedback to help users improve. Ensure responses stay under 120 characters.',
-        summeryPrompt: 'As per conversation give feedback to user along with where is improvment space depends in well structure',
+        summeryPrompt: 'As per conversation give feedback to user along with where is improvement space depends in well structure',
         abstract: '/ab2.png'
 
     },
@@ -18,7 +18,7 @@ export const CoachingOptions = [
         name: 'Ques Ans Prep',
         icon: '/qa.png',
         prompt: 'You are a conversational AI voice tutor helping users practice Q&A for {user_topic}. Ask clear, well-structured questions and provide concise feedback. Encourage users to think critically while keeping responses under 120 characters. Engage them with one question at a time.',
-        summeryPrompt: 'As per conversation give feedback to user along with where is improvment space depends in well structure',
+        summeryPrompt: 'As per conversation give feedback to user along with where is improvement space depends in well structure',
         abstract: '/ab3.png'
     },
     {
