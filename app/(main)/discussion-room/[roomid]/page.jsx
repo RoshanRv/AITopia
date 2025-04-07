@@ -180,6 +180,7 @@ function DiscussionRoom() {
             )}
             <h2 className="text-gray-500 mt-2">{expert?.name}</h2>
             {/* <audio src={audioUrl} type="audio/mp3" autoPlay/> */}
+            
             <div className="p-5  bg-gray-200 px-10 rounded-lg absolute bottom-10 right-10">
               <UserButton />
             </div>

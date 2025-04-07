@@ -61,7 +61,6 @@ function ChatBox({ conversation, enableFeedBackNotes, coachingOptions }) {
       </div>
       {!enableFeedBackNotes ? (
         <h2 className="mt-4 text-gray-400 text-sm">
-          At the end of your conversation we will automatically generate feedback/notes from your conversation.
         </h2>
       ) : (
         <Button onClick={GenerateFeedbackNotes} disabled={loading} className="mt-7 w-full">
