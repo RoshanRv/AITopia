@@ -12,6 +12,7 @@ import { Loader2Icon } from "lucide-react";
 import { AIModel, ConvertTextToSpeech } from "@/services/GlobalServices";
 import ChatBox from "./_components/ChatBox";
 import { toast } from "sonner";
+import Webcam from "react-webcam";
 
 function DiscussionRoom() {
   const { roomid } = useParams();
@@ -180,10 +181,15 @@ function DiscussionRoom() {
             )}
             <h2 className="text-gray-500 mt-2">{expert?.name}</h2>
             {/* <audio src={audioUrl} type="audio/mp3" autoPlay/> */}
-            
-            <div className="p-5  bg-gray-200 px-10 rounded-lg absolute bottom-10 right-10">
-              <UserButton />
+            <div className="absolute bottom-10 right-10">
+              <Webcam height={80}
+              width={130}
+              className="rounded-2xl"
+              />
             </div>
+            {/* <div className="p-5  bg-gray-200 px-10 rounded-lg absolute bottom-10 right-10">
+              <UserButton />
+            </div> */}
           </div>
           <div className="mt-5 flex items-center justify-center">
             {!enableMic ? (
