@@ -4,22 +4,25 @@ import { query } from "./_generated/server";
 
 
 export const CreateNewRoom = mutation({
-    args:{
-        coachingOptions:v.string(),
-        topic:v.string(),
-        expertName:v.string(),
-        uid:v.id('users')
+    args: {
+        coachingOptions: v.string(),
+        topic: v.string(),
+        expertName: v.string(),
+        uid: v.id('users'),
+        language: v.string()
     },
-    handler:async(ctx,args)=>{
-        const result = await ctx.db.insert('DiscussionRoom',{
-            coachingOptions:args.coachingOptions,
-            topic:args.topic,
-            expertName:"kore",
-            uid:args.uid
+    handler: async(ctx, args) => {
+        console.log("Creating new discussion room with args:", args);
+        const result = await ctx.db.insert('DiscussionRoom', {
+            coachingOptions: args.coachingOptions,
+            topic: args.topic,
+            expertName: "kore",
+            uid: args.uid,
+            language: args.language
         });
         return result;
     }
-})
+});
 
 
 export const GetDiscussionRoom = query({

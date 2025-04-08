@@ -9,16 +9,19 @@ const ai = new GoogleGenAI({
   apiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY ,
 });
 
-export const AIModel = async (topic, coachingOption, lastTwoConversation) => {
+export const AIModel = async (topic, coachingOption, lastTwoConversation,language) => {
   const option = CoachingOptions.find((item) => item.name === coachingOption);
   // Create a prompt by replacing the placeholder in your option.
   const prompt = option.prompt.replace("{user_topic}", topic);
+  // Replace the placeholder with the selected language.
+  const UpdatedPrompt = prompt.replace("{language}", language);
+
 
   // Combine the prompt with the conversation context.
   const conversationText = lastTwoConversation
     .map((msg) => `${msg.role}: ${msg.content}`)
     .join("\n");
-  const combinedPrompt = `${prompt}\n\n${conversationText}`;
+  const combinedPrompt = `${UpdatedPrompt}\n\n${conversationText}`;
 
   try {
     const response = await ai.models.generateContent({
