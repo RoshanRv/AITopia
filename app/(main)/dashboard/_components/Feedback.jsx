@@ -1,31 +1,28 @@
 'use client'
-import { UserContext } from '@/app/_context/UserContext';
+import { UserContext } from '@/app/_context/UserContext'; // adjust your import
 import { Button } from '@/components/ui/button';
-import { api } from '@/convex/_generated/api';
+import { getAllDiscussionRooms } from '@/services/api';
 import { CoachingOptions } from '@/services/Options';
-import { useConvex } from 'convex/react'
 import moment from 'moment';
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 
 function Feedback() {
-  const convex = useConvex();
-  const {userData} = useContext(UserContext);
-  const [discussionRoomList,setDiscussionRoomList] = React.useState([]);
-  
-  useEffect(()=>{
-    userData&&GetDiscussionRooms();
-  },[userData])
-  
-  const GetDiscussionRooms=async()=>{
-    const result =await convex.query(api.DiscussionRoom.GetAllDiscussionRoom, { 
-      uid: userData?._id 
-    });
-  console.log("Discussion Rooms",result);
-    setDiscussionRoomList(result);
-  }
-  
+  const { userData } = useContext(UserContext);
+  const [discussionRoomList, setDiscussionRoomList] = useState([]);
+
+  useEffect(() => {
+    if (userData) {
+      getAllDiscussionRooms(userData._id)
+        .then(result => {
+          console.log('Discussion Rooms', result);
+          setDiscussionRoomList(result);
+        })
+        .catch(err => console.error(err));
+    }
+  }, [userData]);
+
   const GetAbstractImages = (option)=>{
     const coachingOption = CoachingOptions.find((item) => item.name == option);
     return coachingOption?.abstract??"/ab1.png";

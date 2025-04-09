@@ -91,4 +91,31 @@ export const AIModelToGenerateFeedbackAndNotes = async (coachingOption, conversa
   }
 };
 
+export const generateCourseOutline = async (topic, courseType, difficultyLevel) => {
+  const PROMPT = `Generate structured study material for ${topic} (${courseType}, ${difficultyLevel} level). 
+  Provide: 
+  1. Course summary (50-100 words)
+  2. 3-5 chapters with summaries
+  3. Topics for each chapter
+  Return as clean JSON without markdown formatting.`;
+
+  try {
+    const response = await ai.models.generateContent({
+      model: "gemini-1.5-flash",
+      contents: PROMPT,
+    });
+
+    // Extract just the JSON text
+    const jsonText = response.text
+      .replace(/```json/g, '')
+      .replace(/```/g, '')
+      .trim();
+
+    return JSON.parse(jsonText);
+  } catch (error) {
+    console.error("AI Error:", error);
+    throw new Error("Failed to generate course content");
+  }
+};
+
 
