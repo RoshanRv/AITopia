@@ -65,7 +65,7 @@ const Panels = ({ images, isGenerating }) => {
                 {item.text && (
                   <textarea
                     onChange={(e) => console.log(e.target.value)}
-                    className="w-[95%] p-1 resize-none rounded-md border text-black border-black left-1/2 -translate-x-1/2 h-auto absolute bottom-3"
+                    className="w-[95%] p-1 resize-none rounded-md border text-black bg-white border-black left-1/2 -translate-x-1/2 h-auto absolute bottom-3"
                     value={item.text}
                   />
                 )}

@@ -37,8 +37,8 @@ const Settings = ({ settings, onSettingsChange }) => {
   }, [settings]);
 
   return (
-    <div className="space-y-3 text-white">
-      <h3 className="text-sm font-medium mb-3">{t("settings.title")}</h3>
+    <div className="space-y-3 ">
+      <h3 className="text-sm font-medium mb-3">Settings</h3>
 
       <div className="flex items-center justify-between">
         <Label
@@ -46,7 +46,7 @@ const Settings = ({ settings, onSettingsChange }) => {
           className="text-sm flex items-center cursor-pointer"
         >
           <Mic className="h-4 w-4 mr-2" />
-          {t("settings.voiceAssistant")}
+          Voice Assistant
         </Label>
         <Switch
           id="voice-assistant"
@@ -61,7 +61,7 @@ const Settings = ({ settings, onSettingsChange }) => {
           className="text-sm flex items-center cursor-pointer"
         >
           <Volume2 className="h-4 w-4 mr-2" />
-          {t("settings.autoRead")}
+          Auto-read Responses
         </Label>
         <Switch
           id="auto-read"
@@ -70,20 +70,20 @@ const Settings = ({ settings, onSettingsChange }) => {
         />
       </div>
 
-      <div className="flex items-center justify-between">
+      {/* <div className="flex items-center justify-between">
         <Label
           htmlFor="accessibility-mode"
           className="text-sm flex items-center cursor-pointer"
         >
           <Accessibility className="h-4 w-4 mr-2" />
-          {t("settings.accessibility")}
+          Accessibility Mode
         </Label>
         <Switch
           id="accessibility-mode"
           checked={settings.accessibility}
           onCheckedChange={handleToggleAccessibility}
         />
-      </div>
+      </div> */}
     </div>
   );
 };

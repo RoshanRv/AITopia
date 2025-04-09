@@ -73,21 +73,21 @@ const ImageUploader = ({
   `;
 
   return (
-    <div className="space-y-4 text-white">
-      <h2 className="text-lg font-semibold">{t("upload.heading")}</h2>
+    <div className="space-y-4 ">
+      <h2 className="text-lg font-semibold">Upload an Image</h2>
 
       {!uploadedImage ? (
         <div {...getRootProps()} className={dropzoneClasses}>
           <input {...getInputProps()} />
           <UploadIcon className="h-10 w-10 text-gray-400 mb-2" />
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            {t("upload.dragDrop")}
+          Drag & drop an image or click to browse
           </p>
-          <p className="text-xs text-gray-400 mt-1">{t("upload.formats")}</p>
+          <p className="text-xs text-gray-400 mt-1">Supports JPG, PNG</p>
         </div>
       ) : (
         <div>
-          <h3 className="text-sm font-medium mb-2">{t("upload.preview")}</h3>
+          <h3 className="text-sm font-medium mb-2">Image Preview</h3>
           <div className="relative rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700">
             <img
               src={uploadedImage}
@@ -97,7 +97,7 @@ const ImageUploader = ({
             <Button
               size="icon"
               variant="secondary"
-              className="absolute top-2 right-2 bg-gray-800/50 hover:bg-gray-800/70 text-white"
+              className="absolute top-2 right-2 bg-gray-800/50 hover:bg-gray-800/70"
               onClick={clearImage}
             >
               <XIcon className="h-4 w-4" />

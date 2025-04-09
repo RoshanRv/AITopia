@@ -106,7 +106,7 @@ const ChatInterface = ({
     if (!uploadedImage) {
       toast({
         title: "No image",
-        description: t("chat.noImage"),
+        description:"⚠️ Please upload an image before asking a question.",
         variant: "destructive",
       });
       return;
@@ -167,7 +167,7 @@ const ChatInterface = ({
   };
 
   return (
-    <div className="flex flex-col text-white h-full">
+    <div className="flex flex-col text-black h-full">
       {/* Chat messages area */}
       <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-4">
         <div className="max-w-3xl mx-auto space-y-4">
@@ -179,8 +179,8 @@ const ChatInterface = ({
                   <FaRobot className=" text-2xl" />
                 </div>
               </div>
-              <div className="bg-white dark:bg-gray-800 text-white rounded-lg p-4 shadow-sm max-w-xs sm:max-w-md md:max-w-lg">
-                <p className="text-sm">{t("chat.welcome")}</p>
+              <div className="bg-primary/50 text-black rounded-lg p-4 shadow-sm max-w-xs sm:max-w-md md:max-w-lg">
+                <p className="text-sm">Welcome to the Kids' Handwriting Evaluator! Upload a handwriting sample, and I'll compare it to the reference letters. I can provide feedback on alignment, shape, and formation, with step-by-step tips to improve.</p>
               </div>
             </div>
           )}
@@ -204,8 +204,8 @@ const ChatInterface = ({
               <div
                 className={`${
                   message.role === "user"
-                    ? "bg-gray-800 text-white order-2"
-                    : "bg-white dark:bg-gray-800"
+                    ? "bg-primary/50 text-black order-2"
+                    : "bg-primary/50"
                 } rounded-lg p-4 shadow-sm max-w-xs sm:max-w-md md:max-w-lg`}
               >
                 {message.role === "assistant" &&
@@ -234,7 +234,7 @@ const ChatInterface = ({
                     </p>
                   </div>
                 ) : (
-                  <p className="text-sm text-white whitespace-pre-wrap">
+                  <p className="text-sm text-black whitespace-pre-wrap">
                     {message.content}
                   </p>
                 )}
@@ -242,7 +242,7 @@ const ChatInterface = ({
 
               {message.role === "user" && (
                 <div className="flex-shrink-0 ml-3 order-3">
-                  <div className="w-8 h-8 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
                     <IoPersonCircleSharp className=" text-2xl text-gray-700 dark:text-gray-200" />
                   </div>
                 </div>
@@ -277,7 +277,7 @@ const ChatInterface = ({
       </div>
 
       {/* Input area */}
-      <div className="border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4">
+      <div className="border-t border-gray-200 dark:border-gray-700 bg-background p-4">
         <div className="max-w-3xl mx-auto">
           <form onSubmit={handleSubmit} className="flex items-center space-x-2">
             {settings.voiceAssistant && isSpeechRecognitionSupported && (
@@ -298,8 +298,8 @@ const ChatInterface = ({
               <Input
                 value={userInput}
                 onChange={(e) => setUserInput(e.target.value)}
-                placeholder={t("chat.placeholder")}
-                className="w-full rounded-full pr-10"
+                placeholder={"📝 Ask a question about the image..."}
+                className="w-full rounded-full pr-10 text-black border border-black"
               />
               {userInput && (
                 <Button
@@ -326,7 +326,7 @@ const ChatInterface = ({
 
           {isListening && (
             <div className="mt-2 text-sm text-center text-primary animate-pulse">
-              {t("chat.listening")}
+              Listening... Speak now
             </div>
           )}
         </div>

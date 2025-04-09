@@ -6,7 +6,6 @@ import { useTheme } from "@/components/ui/theme-provider";
 import { Sun, Moon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import ImageUploader from "@/components/ImageUploader";
-import LanguageSelector from "@/components/LanguageSelector";
 import ChatInterface from "@/components/ChatInterface";
 import Settings from "@/components/Settings";
 import VoiceAssistant from "@/components/VoiceAssistant";
@@ -69,7 +68,7 @@ export default function HandWrittenEvaluator() {
   const handleClearHistory = () => {
     setMessages([]);
     toast({
-      description: t("sidebar.clearSuccess"),
+      description: "Cleared Successfully",
     });
   };
 
@@ -99,7 +98,7 @@ export default function HandWrittenEvaluator() {
     } else if (!uploadedImage) {
       toast({
         title: "No image",
-        description: t("chat.noImage"),
+        description: "Upload image",
         variant: "destructive",
       });
     }
@@ -113,40 +112,25 @@ export default function HandWrittenEvaluator() {
   return (
     <div className="flex flex-col h-screen">
       {/* Header */}
-      <header className="bg-white text-white dark:bg-gray-800 shadow-sm">
+      <header className="bg-white text-black border border-black shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
               <div className="flex-shrink-0 flex items-center">
                 <span className="text-2xl font-semibold text-primary">✍️</span>
-                <h1 className="ml-2 text-xl font-bold">{t("title")}</h1>
+                <h1 className="ml-2 text-xl font-bold">Kids' Handwriting Evaluator</h1>
               </div>
             </div>
 
-            <div className="ml-4 flex items-center md:ml-6 space-x-2">
-              <LanguageSelector />
-
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={toggleTheme}
-                className="ml-2"
-              >
-                {theme === "dark" ? (
-                  <Sun className="h-5 w-5" />
-                ) : (
-                  <Moon className="h-5 w-5" />
-                )}
-              </Button>
-            </div>
+        
           </div>
         </div>
       </header>
-
+      
       {/* Main content */}
       <main className="flex-1 flex flex-col md:flex-row overflow-hidden">
         {/* Sidebar */}
-        <aside className="w-full md:w-80 lg:w-96 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col">
+        <aside className="w-full md:w-80 lg:w-96 bg-white text-black border-r border-gray-200 dark:border-gray-700 flex flex-col">
           <div className="p-4 flex-1 overflow-y-auto">
             {/* Image upload section */}
             <ImageUploader
@@ -163,7 +147,7 @@ export default function HandWrittenEvaluator() {
                 onClick={handleClearHistory}
               >
                 <MdDelete />
-                {t("sidebar.clearHistory")}
+                Clear History
               </Button>
             </div>
           </div>
@@ -175,7 +159,7 @@ export default function HandWrittenEvaluator() {
         </aside>
 
         {/* Chat area */}
-        <div className="flex-1 flex flex-col bg-gray-50 dark:bg-gray-900 overflow-hidden">
+        <div className="flex-1 flex flex-col bg-background overflow-hidden">
           <ChatInterface
             messages={messages}
             setMessages={setMessages}
@@ -186,10 +170,10 @@ export default function HandWrittenEvaluator() {
       </main>
 
       {/* Voice assistant button */}
-      <VoiceAssistant
+      {/* <VoiceAssistant
         onSubmit={handleVoiceInput}
         isEnabled={settings.voiceAssistant}
-      />
+      /> */}
     </div>
   );
 }

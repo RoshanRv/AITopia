@@ -41,12 +41,12 @@ const LanguageSelector = () => {
   };
 
   // Set initial language from localStorage
-  useEffect(() => {
-    const savedLanguage = localStorage.getItem("language");
-    if (savedLanguage) {
-      i18n.changeLanguage(savedLanguage);
-    }
-  }, [i18n]);
+  // useEffect(() => {
+  //   const savedLanguage = localStorage.getItem("language");
+  //   if (savedLanguage) {
+  //     i18n.changeLanguage(savedLanguage);
+  //   }
+  // }, [i18n]);
 
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
