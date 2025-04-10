@@ -15,7 +15,7 @@ function FeatureAssistant() {
     const router=useRouter();
     const handleCardClick=(path)=>{
         if(path){
-            router.push(option.path)
+            router.push(path)
         }else{
 setOpenDialog(!openDialog)
         }
