@@ -31,6 +31,20 @@ export const CoachingOptions = [
     }
 ];
 
+export const HandWritten = [
+    {
+        name: 'Handwritting',
+        icon: '/list.png',
+    },
+    {
+        name: 'AIMeasure',
+        icon: '/handwrittenai.png',
+        path:"/aifeedback"
+    },
+   
+];
+
+
 
 
 export const CoachingExpert = [
