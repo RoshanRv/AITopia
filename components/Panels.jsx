@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { Button } from "./ui/button";
 import { FaGear } from "react-icons/fa6";
-
-
+import { TfiDownload } from "react-icons/tfi";
 const Loading = () => {
   return (
     <div className=" inset-0 text-black backdrop-blur-sm flex items-center justify-center">
@@ -38,7 +37,8 @@ const Panels = ({ images, isGenerating }) => {
   return (
     <div className="w-full h-full flex flex-col items-center justify-center">
       {/* Panels Container */}
-      <div className="w-1/2 border border-gray-500 shadow-xl p-4">
+      <div className="w-1/2 border box a border-gray-500 border relative border-primary/40 shadow-xl p-4">
+<div className=" size-5 bg-primary rounded-full "><TfiDownload className=" text-white " /></div>
         <div className="grid gap-2 grid-cols-2">
           {images
             .slice(
