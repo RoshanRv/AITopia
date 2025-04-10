@@ -91,11 +91,11 @@ export const AIModelToGenerateFeedbackAndNotes = async (coachingOption, conversa
   }
 };
 
-export const generateCourseOutline = async (topic, courseType, difficultyLevel) => {
+export const generateCourseOutline = async ({ topic, courseType, difficultyLevel }) => {
   const PROMPT = `Generate structured study material for ${topic} (${courseType}, ${difficultyLevel} level). 
   Provide: 
   1. Course summary (50-100 words)
-  2. 3-5 chapters with summaries
+  2. 3 chapters with summaries only related to user input topic.
   3. Topics for each chapter
   Return as clean JSON without markdown formatting.`;
 
@@ -115,6 +115,65 @@ export const generateCourseOutline = async (topic, courseType, difficultyLevel) 
   } catch (error) {
     console.error("AI Error:", error);
     throw new Error("Failed to generate course content");
+  }
+};
+
+export const generateMCQ = async ({ notes }) => {
+  const PROMPT = `Generate 10 multiple-choice questions (MCQs) based on the following course notes:
+${notes}
+
+Requirements:
+- Each MCQ must have one correct answer and three incorrect options (total 4 options).
+- Return the output as clean JSON without markdown formatting using the following structure:
+{
+  "mcqs": [
+    {
+      "question": "Question text",
+      "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
+      "answer": "Correct Option text"
+    },
+    ... (total 10 questions)
+  ]
+}`;
+
+  try {
+    const response = await ai.models.generateContent({
+      model: "gemini-1.5-flash",
+      contents: PROMPT,
+    });
+    
+    const jsonText = response.text
+      .replace(/```json/g, '')
+      .replace(/```/g, '')
+      .trim();
+      
+    return JSON.parse(jsonText);
+  } catch (error) {
+    console.error("AI Error:", error);
+    throw new Error("Failed to generate MCQs");
+  }
+};
+
+export const generateMCQFeedback = async (userResponses) => {
+  const PROMPT = `Analyze the following MCQ test results and provide overall performance feedback:
+${JSON.stringify(userResponses, null, 2)}
+
+Requirements:
+- Summarize the user's score, make it very concise.
+- Create two side headings as strengths and weaknesses and provide 2 strength and 2 weakness as points.
+- Provide recommendations on where the user should improve, make it very short.
+- Provide a very short motivation quotes.
+Return the feedback as markdown format.Also , it should be short and concise.`;
+
+  try {
+    const response = await ai.models.generateContent({
+      model: "gemini-2.0-flash",
+      contents: PROMPT,
+    });
+    return response.text.trim();
+  } catch (error) {
+    console.error("AI Error:", error);
+    throw new Error("Failed to generate feedback");
   }
 };
 
