@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { generateStory } from "@/utils/generateStory";
 import { generateImage } from "@/utils/generateImage";
 import Panels from "@/components/Panels";
-
+import ClickSpark from "../../components/ClickSpark";
 const ComicGenerator = () => {
   const [topic, setTopic] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
@@ -113,24 +113,45 @@ const ComicGenerator = () => {
       </div>
 
       {/* Language Switcher */}
-      <div className="mt-6 mb-4 flex justify-center gap-4">
-        <Button
-          variant={language === "English" ? "default" : "outline"}
-          onClick={() => setLanguage("English")}
-          className={"text-black"}
+      <div className="mt-6 mb-4 flex justify-center items-center">
+  <div className="flex gap-2">
+    <ClickSpark
+      sparkColor="#000000"
+      sparkSize={10}
+      sparkRadius={20}
+      sparkCount={12}
+      duration={500}
+    >
+      <Button
+        variant={language === "English" ? "default" : "outline"}
+        onClick={() => setLanguage("English")}
+        className="text-black"
+      >
+        English
+      </Button>
+    </ClickSpark>
 
-        >
-          English
-        </Button>
-        <Button
-          variant={language === "Tamil" ? "default" : "outline"}
-          onClick={() => setLanguage("Tamil")}
-          className={"text-black"}
-        >
-          தமிழ்
+    <ClickSpark
+      sparkColor="#000000"
+      sparkSize={10}
+      sparkRadius={20}
+      sparkCount={12}
+      duration={500}
+    >
+      <Button
+        variant={language === "Tamil" ? "default" : "outline"}
+        onClick={() => setLanguage("Tamil")}
+        className="text-black"
+      >
+        தமிழ்
+      </Button>
+    </ClickSpark>
+  </div>
+</div>
 
-        </Button>
-      </div>
+
+
+
 
       <div className="w-full mt-2 min-h-screen flex flex-col items-center justify-center gap-y-4">
         <div className="flex w-3/4 gap-x-3">
