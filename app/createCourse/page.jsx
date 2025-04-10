@@ -11,6 +11,7 @@ import { generateCourseOutline } from "@/services/GlobalServices";
 import { v4 as uuidv4 } from "uuid";
 import moment from "moment";
 import { UserContext } from "@/app/_context/UserContext";
+import Image from "next/image";
 
 function CreateCourse() {
   const router = useRouter();
@@ -127,14 +128,25 @@ function CreateCourse() {
                 key={course._id}
                 className="border p-4 rounded flex justify-between items-center"
               >
-                <div>
-                  <h3 className="text-lg font-semibold">{course.topic}</h3>
-                  <p className="text-gray-500 text-sm">
-                    Course ID: {course.courseId}
-                  </p>
-                  <p className="text-gray-500 text-sm">
-                    Created {moment(course.createdAt).fromNow()}
-                  </p>
+                <div className="flex items-center space-x-4">
+                  <Image
+                    src="/laptop.png"
+                    alt="Course"
+                    width={70}
+                    height={70}
+                  />
+                  <div>
+                    <h3 className="text-lg font-semibold">{course.topic}</h3>
+                    <p className="text-gray-500 text-sm">
+                      Course Type: {course.courseType}
+                    </p>
+                    <p className="text-gray-500 text-sm">
+                      Difficulty Level: {course.difficultyLevel}
+                    </p>
+                    <p className="text-sm mt-2">
+                      Created {moment(course.createdAt).fromNow()}
+                    </p>
+                  </div>
                 </div>
                 <Button
                   variant="outline"

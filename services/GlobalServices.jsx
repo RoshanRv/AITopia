@@ -92,12 +92,21 @@ export const AIModelToGenerateFeedbackAndNotes = async (coachingOption, conversa
 };
 
 export const generateCourseOutline = async ({ topic, courseType, difficultyLevel }) => {
-  const PROMPT = `Generate structured study material for ${topic} (${courseType}, ${difficultyLevel} level). 
-  Provide: 
-  1. Course summary (50-100 words)
-  2. 3 chapters with summaries only related to user input topic.
-  3. Topics for each chapter
-  Return as clean JSON without markdown formatting.`;
+  const PROMPT = `Generate structured study material for Topic: ${topic}, Course/Study Type: ${courseType}, Difficulty level: ${difficultyLevel}.
+                  Provide:
+                  A course summary (50-100 words).
+                  - Three chapters with summaries that are only related to the user input topic.
+                  - Topics for each chapter.
+                  - Return the output as clean JSON with the following constant keys exactly as written (do not modify the key names):
+                      "topic"
+                      "course_type"
+                      "difficulty_level"
+                      "course_summary"
+                      "chapters" (an array where each element must have exactly the keys below
+                      "chapter_number"
+                      "chapter_title"
+                      "chapter_summary"
+                      "topics" (an array)`;
 
   try {
     const response = await ai.models.generateContent({
@@ -163,7 +172,7 @@ Requirements:
 - Create two side headings as strengths and weaknesses and provide 2 strength and 2 weakness as points.
 - Provide recommendations on where the user should improve, make it very short.
 - Provide a very short motivation quotes.
-Return the feedback as markdown format.Also , it should be short and concise.`;
+Return the feedback as proper markdown format.Also , it should be short and concise.`;
 
   try {
     const response = await ai.models.generateContent({

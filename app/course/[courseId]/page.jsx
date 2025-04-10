@@ -14,6 +14,8 @@ function CoursePage() {
   const [loading, setLoading] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [notesExist, setNotesExist] = useState(false);
+  const [generatingFlashcards, setGeneratingFlashcards] = useState(false);
+  const [generatingMCQ, setGeneratingMCQ] = useState(false);
 
   useEffect(() => {
     async function fetchCourse() {
@@ -78,6 +80,28 @@ function CoursePage() {
     }
   };
 
+  const handleGenerateFlashcards = async () => {
+    setGeneratingFlashcards(true);
+    try {
+      router.push(`/course/${courseId}/flashcards`);
+    } catch (error) {
+      console.error("Error navigating to flashcards:", error);
+    } finally {
+      setGeneratingFlashcards(false);
+    }
+  };
+
+  const handleGenerateMCQ = async () => {
+    setGeneratingMCQ(true);
+    try {
+      router.push(`/course/${courseId}/mcq`);
+    } catch (error) {
+      console.error("Error navigating to MCQ:", error);
+    } finally {
+      setGeneratingMCQ(false);
+    }
+  };
+
   if (loading || !course) {
     return (
       <div className="flex justify-center items-center h-screen text-lg">
@@ -94,7 +118,7 @@ function CoursePage() {
           <Button
             className="bg-primary"
             variant="outline"
-            onClick={() => router.push(`/course/${courseId}`)}
+            onClick={() => router.push(`/createCourse`)}
           >
             &larr; Back to Course
           </Button>
@@ -131,10 +155,11 @@ function CoursePage() {
               Flashcards
             </h2>
             <Button
-              onClick={() => router.push(`/course/${courseId}/flashcards`)}
+              onClick={handleGenerateFlashcards}
               className="mt-6 w-full"
+              disabled={generatingFlashcards}
             >
-              Generate Flashcards
+              {generatingFlashcards ? "Generating Flashcards..." : "Generate Flashcards"}
             </Button>
           </div>
 
@@ -145,10 +170,11 @@ function CoursePage() {
               MCQ Questions
             </h2>
             <Button
-              onClick={() => router.push(`/course/${courseId}/mcq`)}
+              onClick={handleGenerateMCQ}
               className="mt-6 w-full"
+              disabled={generatingMCQ}
             >
-              Generate
+              {generatingMCQ ? "Generating MCQ..." : "Generate MCQ"}
             </Button>
           </div>
         </section>
@@ -163,10 +189,10 @@ function CoursePage() {
               {chapters.map((chapter, idx) => (
                 <div key={idx} className="p-6 bg-white rounded-lg shadow-sm">
                   <h4 className="text-xl font-semibold text-gray-800">
-                    {chapter.chapterTitle}
+                    {chapter.chapter_title}
                   </h4>
                   <p className="mt-2 text-gray-600">
-                    {[chapter.summary, chapter.chapterSummary].filter(Boolean).join(' ')}
+                    {[chapter.chapter_summary, chapter.chapterSummary].filter(Boolean).join(" ")}
                   </p>
                 </div>
               ))}
