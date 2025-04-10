@@ -54,3 +54,52 @@ export async function createStudyMaterial(data) {
     }
     return await res.json();
 }
+
+export async function getCourseNotes(courseId) {
+    const res = await fetch(`/api/courseNotes?courseId=${courseId}`);
+    if (res.status === 404) {
+        // No notes exist; return an empty object or handle it as desired.
+        return { notes: "" };
+    }
+    if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message || 'Failed to fetch course notes');
+    }
+    return await res.json();
+}
+
+export async function createCourseNotes(data) {
+    const res = await fetch('/api/courseNotes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    });
+    if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message || 'Failed to create course notes');
+    }
+    return await res.json();
+}
+
+
+export async function getCourseFlashcards(courseId) {
+    const res = await fetch(`/api/flashcards?courseId=${courseId}`);
+    if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message || 'Failed to fetch course flashcards');
+    }
+    return await res.json();
+}
+
+export async function createCourseFlashcards(data) {
+    const res = await fetch('/api/flashcards', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    });
+    if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message || 'Failed to create course flashcards');
+    }
+    return await res.json();
+}
