@@ -19,7 +19,7 @@ return (
             </div>
             <Button className='text-white'>Profile</Button>
         </div>
-        <div className='grid grid-cols-2 lg:grid-cols-5 xl:grid-cols-5 gap-10 m-10'>
+        <div className='grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-10 m-10'>
         {CoachingOptions.map((option,index)=>(
             <BlurFade key ={option.icon} delay={0.25 + index * 0.05} inView>
                 <div key={index} className='p-3 bg-gray-200 rounded-3xl flex flex-col justify-center items-center'>
