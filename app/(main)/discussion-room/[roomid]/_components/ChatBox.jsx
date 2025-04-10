@@ -1,26 +1,22 @@
 import { Button } from "@/components/ui/button";
-import { api } from "@/convex/_generated/api";
 import { AIModelToGenerateFeedbackAndNotes } from "@/services/GlobalServices";
-import { useMutation } from "convex/react";
-import { LoaderCircle } from "lucide-react";
-import { useParams } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "sonner";
+import { updateDiscussionRoom } from "@/services/api";
+import { useParams } from "next/navigation";
+
 function ChatBox({ conversation, enableFeedBackNotes, coachingOptions }) {
   const [loading, setLoading] = useState(false);
-  const updateSummery = useMutation(api.DiscussionRoom.UpdateSummery);
   const { roomid } = useParams();
 
   const GenerateFeedbackNotes = async () => {
     setLoading(true);
     try {
       const result = await AIModelToGenerateFeedbackAndNotes(coachingOptions, conversation);
-      // Extract the content from the returned object:
       const feedbackContent = result.choices[0].message.content;
       console.log("AI Response:", feedbackContent);
       
-      // Call the mutation with the correct field value
-      await updateSummery({
+      await updateDiscussionRoom({
         id: roomid,
         summery: feedbackContent,
       });
@@ -43,9 +39,7 @@ function ChatBox({ conversation, enableFeedBackNotes, coachingOptions }) {
         {conversation.map((item, index) => (
           <div
             key={index}
-            className={`flex ${
-              item.role === "user" ? "justify-end" : "justify-start"
-            }`}
+            className={`flex ${ item.role === "user" ? "justify-end" : "justify-start" }`}
           >
             {item.role === "assistant" ? (
               <h2 className="p-1 px-2 bg-primary mt-2 text-white inline-block rounded-md">
@@ -60,11 +54,14 @@ function ChatBox({ conversation, enableFeedBackNotes, coachingOptions }) {
         ))}
       </div>
       {!enableFeedBackNotes ? (
-        <h2 className="mt-4 text-gray-400 text-sm">
-        </h2>
+        <h2 className="mt-4 text-gray-400 text-sm"></h2>
       ) : (
         <Button onClick={GenerateFeedbackNotes} disabled={loading} className="mt-7 w-full">
-          {loading && <LoaderCircle className="animate-spin mr-2" />}
+          {loading && (
+            <span className="animate-spin mr-2">
+              <svg className="h-5 w-5" viewBox="0 0 24 24"></svg>
+            </span>
+          )}
           Generate FeedBack/Notes
         </Button>
       )}
