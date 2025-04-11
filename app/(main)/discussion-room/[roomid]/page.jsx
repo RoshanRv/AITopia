@@ -57,6 +57,12 @@ function DiscussionRoom() {
             discussionRoomData.language
           );
           console.log("AI Response:", aiResponse);
+          const url = await ConvertTextToSpeech(
+          aiResponse.choices[0].message.content, 
+          "kore"
+          );
+          console.log("Audio URL:", url);
+          setAudioUrl(url);
           setConversation((prev) => [
             ...prev,
             {
@@ -170,7 +176,10 @@ function DiscussionRoom() {
             ) : (
               <p>Loading expert...</p>
             )}
+
             <h2 className="text-gray-500 mt-2">{expert?.name}</h2>
+            <audio src={audioUrl} type="audio/mp3" autoPlay/>
+
             <div className="absolute bottom-10 right-10">
               <Webcam height={80} width={130} className="rounded-2xl" />
             </div>
