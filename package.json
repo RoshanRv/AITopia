@@ -60,5 +60,9 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "tailwindcss": "^4"
+  },
+  "optionalDependencies": {
+    "@tailwindcss/oxide-linux-x64-gnu": "latest",
+    "@tailwindcss/oxide-linux-x64-musl": "latest"
   }
 }
